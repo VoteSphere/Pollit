@@ -5,6 +5,7 @@
     "target": "es2022",
     "esModuleInterop": true,
     "module": "NodeNext",
-    "outDir": "./dist"
+    "outDir": "dist",
+    "rootDir": "src"
   }
 }

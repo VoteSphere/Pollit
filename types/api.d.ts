@@ -16,3 +16,10 @@ export interface NewPollRequest {
 export interface NewPollResponse {
   urlSlug: string; // only the part after the /, e.g. '/p/r5ecdf'
 }
+
+// define Server Error
+export interface ServerError {
+  log: string;
+  status: number;
+  message: { err: string };
+}

@@ -55,7 +55,7 @@ export default {
     },
     proxy: [
       {
-        context: ['/api'],
+        context: ['/api', '/p'],
         target: 'http://localhost:3000',
       },
     ],

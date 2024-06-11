@@ -1,14 +1,16 @@
 import express, { Request, Response, NextFunction } from 'express';
 import apiRouter from './routes/apiRouter.js';
-import { ServerError } from '../../types/api.js';
+import type { ServerError } from '../../types/api.d.ts';
 
 const app = express();
 
 const PORT = 3000;
+
 app.use(express.json());
+
 app.use('/api', apiRouter);
 
-app.use('*', (req: Request, res: Response) => res.sendStatus(404));
+app.use('*', (req: Request, res: Response) => res.status(404).send('Resource not found'));
 
 // define global error handler here
 app.use((err: ServerError, req: Request, res: Response, _next: NextFunction) => {

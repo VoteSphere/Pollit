@@ -1,4 +1,9 @@
-import type { NewPollRequest, NewPollResponse, ServerError } from '../../../types/api.d.ts';
+import type {
+  NewPollRequest,
+  NewPollResponse,
+  ServerError,
+  votePageInfo,
+} from '../../../types/api.d.ts';
 import { Request, Response, NextFunction } from 'express';
 import { pool } from '../db/connect.js';
 import * as db from '../db/connect.js';
@@ -134,7 +139,7 @@ export const linkOpened = async (req: Request, res: Response, next: NextFunction
       votes_per_voter: votes_per_voter,
       is_open: is_open,
       pollItemNames: pollItemNames,
-    };
+    } as votePageInfo;
     next();
   } catch (err) {
     const databaseErr: ServerError = {

@@ -1,0 +1,83 @@
+/* VoterPage.css */
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5; /* Light Background */
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px; /* Slightly larger to accommodate poll items */
+  margin: 40px auto;
+}
+
+h1,
+h3,
+h4,
+p {
+  color: #0b3d91; /* Dark Blue */
+}
+
+.pollItems {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pollItems div {
+  width: 80%;
+  margin: 10px 0;
+}
+
+.pollItems button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #43a047; /* Green */
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pollItems button:hover {
+  background-color: #ffd700; /* Yellow */
+}
+
+.pollLink,
+.closePollButton {
+  margin-top: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.pollLink a,
+.closePollButton button {
+  text-decoration: none;
+  color: #1f75fe; /* Blue */
+  font-weight: bold;
+  transition: color 0.3s ease;
+  background-color: #43a047; /* Green */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.pollLink a:hover,
+.closePollButton button:hover {
+  color: #0056b3;
+  background-color: #ffd700; /* Yellow */
+}

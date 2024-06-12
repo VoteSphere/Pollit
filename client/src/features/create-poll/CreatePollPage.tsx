@@ -62,7 +62,7 @@ const CreatePollPage: React.FC = (): JSX.Element => {
       items: inputState.options.map((option) => ({ name: option })),
       maxVotes: 1,
     };
-    fetch('http://localhost:3000/api/polls', {
+    fetch('/api/polls', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -76,7 +76,8 @@ const CreatePollPage: React.FC = (): JSX.Element => {
         return response.json();
       })
       .then((res) => {
-        setPollId(res.e.pollId);
+        console.log(res);
+        setPollId(res.urlSlug);
         setShowLink(true);
         setInputState({
           pollname: '',
@@ -84,7 +85,7 @@ const CreatePollPage: React.FC = (): JSX.Element => {
           options: ['', '', ''],
         });
       })
-      .catch(() => console.log('error creating new poll'));
+      .catch((e) => console.log(e));
   };
 
   return (
@@ -127,7 +128,7 @@ const CreatePollPage: React.FC = (): JSX.Element => {
         <button name='createPoll' className='submitbutton' type='submit'>
           Create Poll
         </button>
-        <div className='pollLink'>{showLink && <Link to={`/p/:pollId`}>Poll Link</Link>}</div>
+        <div className='pollLink'>{showLink && <Link to={`${pollId}`}>Poll Link</Link>}</div>
       </form>
     </div>
   );

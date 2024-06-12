@@ -1,45 +1,46 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import '../../styles/voter.css';
 
-import { NewPollRequest, PollItem } from '../../../../types/api';
-
-interface PollState {
-  pollname: string;
-  description: string;
-  options: string[];
-}
+import { votePageInfo } from '../../../../types/api';
 
 const VoterPage: React.FC = () => {
-  const [inputState, setInputState] = useState<PollState>({
-    pollname: '',
-    description: '',
-    options: ['', '', ''],
+  const [pollState, setPollState] = useState<votePageInfo>({
+    poll_description: '',
+    poll_name: '',
+    votes_per_voter: 1,
+    is_open: false,
+    pollItemNames: ['', '', ''],
   });
 
-  const [showLink, setShowLink] = useState<boolean>(false);
-  const [pollId, setPollId] = useState<string>('');
+  const [voteState, setVoteState] = useState<Record<string, number>>({
+    ...pollState.pollItemNames.reduce(
+      (acc, itemName) => ({
+        ...acc,
+        [itemName]: 0,
+      }),
+      {},
+    ),
+  });
 
-  const handleInputs = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setInputState({ ...inputState, [e.target.name]: e.target.value });
+  const handleVote = (itemName: string) => {
+    if (pollState.votes_per_voter > 0) {
+      setPollState({ ...pollState, votes_per_voter: pollState.votes_per_voter - 1 });
+      setVoteState((prevState) => ({
+        ...prevState,
+        [itemName]: prevState[itemName] + 1,
+      }));
+    }
   };
-  const handleSubmit = (e: React.FormEvent): void => {
-    e.preventDefault();
-    const data: NewPollRequest = {
-      name: inputState.pollname,
-      description: inputState.description,
-      items: [
-        { name: inputState.options[0] },
-        { name: inputState.options[1] },
-        { name: inputState.options[2] },
-      ],
-      maxVotes: 1,
-    };
-    fetch(`http://localhost:3000/api/polls/${id}`, {
+
+  const { pollId } = useParams<{ pollId: string }>();
+
+  useEffect(() => {
+    fetch(`/api/polls/${pollId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
     })
       .then((response) => {
         if (!response.ok) {
@@ -47,60 +48,34 @@ const VoterPage: React.FC = () => {
         }
         return response.json();
       })
-      .then((res) => {
-        setPollId(res.e.pollId);
-        setShowLink(true);
-        setInputState({
-          pollname: '',
-          description: '',
-          options: ['', '', ''],
-        });
+      .then((data: votePageInfo) => {
+        setPollState(data);
       })
       .catch(() => console.log('error creating new poll'));
-  };
+  }, [pollId]);
 
   return (
     <div>
-      <form className='createInput' onSubmit={handleSubmit}>
-        <h3>Create a Poll</h3>
-        <input
-          name='pollname'
-          value={inputState.pollname}
-          type=' text'
-          onChange={handleInputs}
-          placeholder='Poll Name'
-        ></input>
-        <input
-          name='description'
-          value={inputState.description}
-          type='text'
-          onChange={handleInputs}
-          placeholder='Description'
-        ></input>
-        <h4>Poll Options</h4>
-        <input
-          name='option1'
-          value={inputState.options[0]}
-          onChange={handleInputs}
-          placeholder='Option'
-        ></input>
-        <input
-          name='option2'
-          value={inputState.options[1]}
-          onChange={handleInputs}
-          placeholder='Option'
-        ></input>
-        <input
-          name='option3'
-          value={inputState.options[2]}
-          onChange={handleInputs}
-          placeholder='Option'
-        ></input>
-        <button name='createPoll' className='submitbutton' type='submit'>
-          Create Poll
-        </button>
-        <div className='pollLink'>{showLink && <Link to={`/p/${pollId}`}>Poll Link</Link>}</div>
-      </form>
+      <h1>{pollState.poll_name}</h1>
+      <p>{pollState.poll_description}</p>
+      <p>
+        <br />
+        Vote to see results...
+      </p>
+      {pollState.pollItemNames.map((name: string, index: number) => (
+        <div key={index}>
+          <p>
+            {name}: votes {voteState[name]}
+          </p>
+          {pollState.is_open && pollState.votes_per_voter > 0 && (
+            <button type='button' onClick={() => handleVote(name)}>
+              vote here
+            </button>
+          )}
+        </div>
+      ))}
+      <button>Close Poll</button>
+      <Link to='/'>Create New Poll</Link>
     </div>
   );
 };

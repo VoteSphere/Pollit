@@ -1,9 +1,9 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import exampleReducer from '../features/create-poll/createPollSlice';
+// import exampleReducer from '../features/create-poll/createPollSlice';
 
 const rootReducer = combineReducers({
   // reducers go here
-  example: exampleReducer,
+  // example: exampleReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

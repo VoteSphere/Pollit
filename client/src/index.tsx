@@ -10,6 +10,6 @@ if (!rootElement) {
 }
 createRoot(rootElement).render(
   <Provider store={store}>
-      <App />
+    <App />
   </Provider>,
 );

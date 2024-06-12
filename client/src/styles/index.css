@@ -6,7 +6,93 @@
 } */
 /* CreatePollPage.css */
 
+/* CreatePollPage.css */
+
 body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5; /* Light Background */
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 40px auto;
+}
+
+h1,
+h3,
+h4 {
+  color: #0b3d91; /* Dark Blue */
+}
+
+.createInput {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.createInput input {
+  width: 80%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.createInput input:focus {
+  border-color: #1f75fe; /* Blue */
+  outline: none;
+}
+
+.createInput input::placeholder {
+  color: #999;
+}
+
+.createInput button.submitbutton {
+  padding: 10px 20px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #43a047; /* Green */
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.createInput button.submitbutton:hover {
+  background-color: #ffd700; /* Yellow */
+}
+
+.pollLink {
+  margin-top: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.pollLink a {
+  text-decoration: none;
+  color: #1f75fe; /* Blue */
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.pollLink a:hover {
+  color: #4fc3f7; /* Light Blue */
+}
+
+/* body {
   font-family: Arial, sans-serif;
   background-color: #f0f2f5;
   margin: 0;
@@ -88,4 +174,4 @@ h4 {
 
 .pollLink a:hover {
   color: #0056b3;
-}
+} */

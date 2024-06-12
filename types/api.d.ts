@@ -1,5 +1,13 @@
 // Create new poll
 
+export interface votePageInfo {
+  poll_description: string;
+  poll_name: string;
+  votes_per_voter: number;
+  is_open: boolean;
+  pollItemNames: string[];
+}
+
 interface PollItem {
   name: string; // must not be empty string
 }

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../../styles/index.css';
 
 import { NewPollRequest, PollItem } from '../../../../types/api';
 
@@ -10,60 +9,33 @@ interface PollState {
   options: string[];
 }
 
-const CreatePollPage: React.FC = (): JSX.Element => {
+const VoterPage: React.FC = () => {
   const [inputState, setInputState] = useState<PollState>({
     pollname: '',
     description: '',
     options: ['', '', ''],
   });
 
-  const [showLink, setShowLink] = useState<boolean>(true);
-
+  const [showLink, setShowLink] = useState<boolean>(false);
   const [pollId, setPollId] = useState<string>('');
 
   const handleInputs = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInputState({ ...inputState, [e.target.name]: e.target.value });
   };
-
-  const handleOptionsInputs = (index: number, value: string) => {
-    setInputState((prevState) => {
-      const newOptions = [...prevState.options];
-      newOptions[index] = value;
-      return {
-        ...prevState,
-        options: newOptions,
-      };
-    });
-  };
-
-  const addOption = () => {
-    setInputState((prevState) => ({
-      ...prevState,
-      options: [...prevState.options, ''],
-    }));
-  };
-
-  const deleteOption = (index: number) => {
-    setInputState((prevState) => {
-      const newOptions: string[] = [...prevState.options];
-      newOptions.splice(index, 1);
-      return {
-        ...prevState,
-        options: newOptions,
-      };
-    });
-  };
-
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     const data: NewPollRequest = {
       name: inputState.pollname,
       description: inputState.description,
-      items: inputState.options.map((option) => ({ name: option })),
+      items: [
+        { name: inputState.options[0] },
+        { name: inputState.options[1] },
+        { name: inputState.options[2] },
+      ],
       maxVotes: 1,
     };
-    fetch('http://localhost:3000/api/polls', {
-      method: 'POST',
+    fetch(`http://localhost:3000/api/polls/${id}`, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -106,31 +78,31 @@ const CreatePollPage: React.FC = (): JSX.Element => {
           placeholder='Description'
         ></input>
         <h4>Poll Options</h4>
-        {inputState.options.map((option, index) => (
-          <div key={index}>
-            <input
-              type='text'
-              value={option}
-              onChange={(e) => handleOptionsInputs(index, e.target.value)}
-              placeholder='Option'
-            />
-            {inputState.options.length >= 3 && (
-              <button type='button' onClick={() => deleteOption(index)}>
-                Delete Option
-              </button>
-            )}
-          </div>
-        ))}
-        <button type='button' onClick={() => addOption()}>
-          Add Option
-        </button>
+        <input
+          name='option1'
+          value={inputState.options[0]}
+          onChange={handleInputs}
+          placeholder='Option'
+        ></input>
+        <input
+          name='option2'
+          value={inputState.options[1]}
+          onChange={handleInputs}
+          placeholder='Option'
+        ></input>
+        <input
+          name='option3'
+          value={inputState.options[2]}
+          onChange={handleInputs}
+          placeholder='Option'
+        ></input>
         <button name='createPoll' className='submitbutton' type='submit'>
           Create Poll
         </button>
-        <div className='pollLink'>{showLink && <Link to={`/p/:pollId`}>Poll Link</Link>}</div>
+        <div className='pollLink'>{showLink && <Link to={`/p/${pollId}`}>Poll Link</Link>}</div>
       </form>
     </div>
   );
 };
 
-export default CreatePollPage;
+export default VoterPage;

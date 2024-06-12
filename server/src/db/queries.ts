@@ -34,10 +34,10 @@ export const UPDATE_LAST_VOTE_TIMESTAMP = `
   WHERE _id = $1;
 `;
 
-export const SELECT_POLL_BY_ID = `
+export const SELECT_POLL_BY_URL = `
   SELECT *
   FROM polls
-  WHERE _id = $1;
+  WHERE url_slug = $1;
 `;
 
 export const SELECT_POLL_ITEMS_BY_POLL_ID = `

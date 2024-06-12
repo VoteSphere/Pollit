@@ -1,12 +1,19 @@
 import express, { Request, Response, NextFunction } from 'express';
 import apiRouter from './routes/apiRouter.js';
 import type { ServerError } from '../../types/api.d.ts';
+import path from 'node:path';
 
 const app = express();
 
 const PORT = 3000;
 
 app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve('client/dist/index.html'));
+});
+
+app.use('/', express.static(path.resolve('./client/dist')));
 
 app.use('/api', apiRouter);
 

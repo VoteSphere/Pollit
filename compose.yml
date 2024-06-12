@@ -10,4 +10,3 @@ services:
       - '5432:5432'
     volumes:
       - ./db/setup.sql:/docker-entrypoint-initdb.d/setup.sql
-# pg_ctl -D /var/lib/postgresql/data -l logfile start

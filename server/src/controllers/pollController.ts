@@ -1,12 +1,23 @@
-import type {
-  NewPollRequest,
-  NewPollResponse,
-  ServerError /* DbPollRequest */,
-} from '../../../types/api.d.ts';
+import type { NewPollRequest, NewPollResponse, ServerError } from '../../../types/api.d.ts';
 import { Request, Response, NextFunction } from 'express';
 import { pool } from '../db/connect.js';
-import pg from 'pg';
-import { INSERT_POLL, INSERT_POLL_ITEM } from '../db/queries.js';
+import * as db from '../db/connect.js';
+import type pg from 'pg';
+import {
+  INSERT_POLL,
+  INSERT_POLL_ITEM,
+  SELECT_POLL_BY_URL,
+  SELECT_POLL_ITEMS_BY_POLL_ID,
+} from '../db/queries.js';
+import { Poll, PollItem } from '../types.js';
+
+export interface InsertQueryRes extends pg.QueryResult {
+  rows: [
+    {
+      _id: number;
+    },
+  ];
+}
 
 // function to generate random string
 function generateRandomString(length: number): string {
@@ -26,14 +37,6 @@ export const createPoll = async (req: Request, res: Response, next: NextFunction
 
   const body = req.body as NewPollRequest;
   const { description, name, items, maxVotes } = body;
-
-  interface InsertQueryRes extends pg.QueryResult {
-    rows: [
-      {
-        _id: number;
-      },
-    ];
-  }
 
   try {
     // to do: use a transaction and pipeline/batch requests
@@ -91,5 +94,54 @@ export const validatePollRequest = (req: Request, res: Response, next: NextFunct
     next(invalidInputErr);
   } else {
     next();
+  }
+};
+
+//user opens link
+//user sends request to server for information on poll and poll items associated with poll
+//in request user sends pollID from link
+//query for all information on poll
+//query for all poll items associated
+//response all poll item names and ids as object
+//response poll description, name, votes-per-voter, isOpen
+
+export const linkOpened = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // get relevent poll information
+    const poll_url_slug = req.params.id;
+    const pollInfo = await db.query(SELECT_POLL_BY_URL, [`/p/${poll_url_slug}`]);
+    if (!pollInfo || pollInfo.rows.length === 0) {
+      console.error('No poll found with the provided ID.');
+      throw new Error();
+    }
+
+    const { _id, poll_description, name, votes_per_voter, is_open } = pollInfo.rows[0] as Poll;
+
+    // create an array of each relevent pollItem's name
+    const pollItemsInfo = await db.query(SELECT_POLL_ITEMS_BY_POLL_ID, [_id]);
+    if (!pollItemsInfo || pollItemsInfo.rows.length === 0) {
+      console.error('No poll items found or query failed.');
+      throw new Error();
+    }
+    const pollItemNames: string[] = pollItemsInfo.rows.map(
+      (column: PollItem): string => column.name,
+    );
+
+    // return relevent information to client
+    res.locals.pollInfo = {
+      poll_description: poll_description,
+      poll_name: name,
+      votes_per_voter: votes_per_voter,
+      is_open: is_open,
+      pollItemNames: pollItemNames,
+    };
+    next();
+  } catch (err) {
+    const databaseErr: ServerError = {
+      log: 'Error retrieving poll information',
+      status: 404,
+      message: { err: 'Poll does not exist' },
+    };
+    next(databaseErr);
   }
 };

@@ -2,9 +2,10 @@ import pg from 'pg';
 const { Pool } = pg;
 
 export const pool = new Pool({
-  database: 'pollit',
-  user: 'postgres',
-  password: 'mypassword',
+  host: process.env.PG_HOST,
+  database: process.env.PG_DB,
+  user: process.env.PG_USER,
+  password: process.env.PG_PASSWORD,
   port: 5432,
 });
 

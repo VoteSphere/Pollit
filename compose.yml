@@ -1,4 +1,15 @@
 services:
+  app:
+    build: .
+    environment:
+      PG_DB: pollit
+      PG_HOST: postgres
+      PG_USER: postgres
+      PG_PASSWORD: mypassword
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres
   postgres:
     image: postgres:alpine
     container_name: postgres

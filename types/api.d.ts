@@ -16,3 +16,28 @@ export interface NewPollRequest {
 export interface NewPollResponse {
   urlSlug: string; // only the part after the /, e.g. '/p/r5ecdf'
 }
+
+// define Server Error
+export interface ServerError {
+  log: string;
+  status: number;
+  message: { err: string };
+}
+
+// Get poll info
+
+export interface GetPollRequest {
+  urlSlug: string;
+}
+
+export interface GetPollResponse {
+  name: string;
+  description: string;
+  isOpen: boolean;
+  maxVotes: number;
+  closedTime: string; // stringified date
+  createdTime: string; // stringified date
+  lastVote: string; // stringified date
+  items: PollItem[];
+  // votes: Votes[]
+}

@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { validatePollRequest, createPoll } from '../controllers/pollController.js';
+import { validatePollRequest, createPoll, linkOpened } from '../controllers/pollController.js';
 
 const apiRouter: Router = express.Router();
 
@@ -9,8 +9,8 @@ apiRouter.post('/polls', validatePollRequest, createPoll, (req, res) => {
 });
 
 // GET Route handler
-apiRouter.get('/polls/:id', (req, res) => {
-  res.status(200).json();
+apiRouter.get('/polls/:id', linkOpened, (req, res) => {
+  res.status(200).json(res.locals.pollInfo);
 });
 
 export default apiRouter;

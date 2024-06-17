@@ -1,6 +1,7 @@
 // Create new poll
 
 export interface votePageInfo {
+  poll_id: number;
   poll_description: string;
   poll_name: string;
   votes_per_voter: number;

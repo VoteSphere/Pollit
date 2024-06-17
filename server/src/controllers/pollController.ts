@@ -134,6 +134,7 @@ export const linkOpened = async (req: Request, res: Response, next: NextFunction
 
     // return relevent information to client
     res.locals.pollInfo = {
+      poll_id: _id,
       poll_description: poll_description,
       poll_name: name,
       votes_per_voter: votes_per_voter,
